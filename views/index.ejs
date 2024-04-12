@@ -1,0 +1,48 @@
+<%- contentFor('layoutContent') %>
+<h1><%= title %></h1>
+<p>Welcome to <%= title %></p>
+<div class="messageHolder">
+<% if(user) { %>
+  <div class="contentCard">
+    <form method="post" action="/post-message">
+      <div class="formGroup">
+        <textarea cols="6" rows="6" id="postMessage" name="message" placeholder="Post your message here" required></textarea>
+      </div>
+      <div class="formButtons">
+        <button type="submit" class="menuButton">Send message</button>
+      </div>
+    </form>
+  </div>
+<% } %>
+<% if(messages && messages.length > 0)
+{
+  for(message of messages)
+  { %>
+    <div class="contentCard">
+      <div class="contentCardMessage">
+        <div class="messageHolder">
+          <%= message.message %>
+        </div>
+        <% if(user && user.admin) { %>
+          <div class="deleteHolder">
+              <button onclick="location.href='/messages/<%= message._id %>/delete';" type="button" class="menuButton">Delete message</button>
+          </div>
+        <% } %>
+        <hr class="splitter">
+        <div class="informationHolder<%= (user && user.membership_status) ? '' : '-noLogin' %>">
+          <% if(user && user.membership_status) { %>
+          <div class="authorHolder">
+              <%= message.author.first_name %> <%= message.author.last_name %>              
+            
+          </div>
+          <div class="timestamp"> <%= message.formatted_timestamp %></div>
+          <% } else { %>
+            You need to <strong>be a member</strong> to know more information about this message 
+          <% } %>
+        </div>
+      </div>
+    </div>
+  <%
+  }
+} %>
+</div>
